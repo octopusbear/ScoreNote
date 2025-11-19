@@ -1,0 +1,5 @@
+{
+  "name": "Middle School Score Visualizer",
+  "description": "A minimalist full-stack MVP for students to record grades, visualize trends, and receive automated encouragement based on progress towards university goals.",
+  "requestFramePermissions": []
+}
