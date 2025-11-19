@@ -102,7 +102,7 @@ const RadarDetail: React.FC<Props> = ({ refreshTrigger }) => {
               <Tooltip 
                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 30px -5px rgba(0,0,0,0.1)' }}
                 // 自定义 Tooltip 内容，显示真实分数而不是归一化分数
-                formatter={(value, name, props) => {
+                formatter={(_, __, props) => {
                   const { originalScore, fullMark } = props.payload;
                   // 计算得分率
                   const rate = Math.round((originalScore / fullMark) * 100);
