@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ScoreInput from './components/ScoreInput';
 import TrendChart from './components/TrendChart';
 import RadarDetail from './components/RadarDetail';
@@ -13,7 +13,7 @@ export default function App() {
   
   // V4.0 新增状态
   const [currentTarget, setCurrentTarget] = useState<{ target: UniversityTarget; gap: number; isPassed: boolean } | null>(null);
-  const [latestScore, setLatestScore] = useState(0);
+  const [, setLatestScore] = useState(0);
 
   // 每次数据更新时，重新计算“阶梯式目标”
   useEffect(() => {
