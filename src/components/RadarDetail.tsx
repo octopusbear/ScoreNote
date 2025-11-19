@@ -39,8 +39,22 @@ const RadarDetail: React.FC<Props> = ({ refreshTrigger }) => {
       const chartData = allSubjects
         // @ts-ignore
         .filter(s => data[s.key] !== null && data[s.key] !== undefined)
-        // @ts-ignore
-        .map(s => ({ subject: s.label, A: data[s.key] || 0, fullMark: s.full }));
+        .map(s => {
+          // @ts-ignore
+          const originalScore = Number(data[s.key]) || 0;
+          
+          // 核心修复：归一化处理
+          // 将所有分数映射到 0-150 的区间，以便在雷达图上视觉统一
+          // 公式：(原始分 / 满分) * 150
+          const normalizedScore = (originalScore / s.full) * 150;
+
+          return { 
+            subject: s.label, 
+            originalScore: originalScore, // 用于 Tooltip 显示真实分数
+            normalizedScore: Math.round(normalizedScore), // 用于画图
+            fullMark: s.full 
+          };
+        });
         
       setDetailData(chartData);
     });
@@ -73,9 +87,31 @@ const RadarDetail: React.FC<Props> = ({ refreshTrigger }) => {
             <RadarChart cx="50%" cy="50%" outerRadius="70%" data={detailData}>
               <PolarGrid stroke="#e2e8f0" />
               <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }} />
+              {/* 坐标轴固定为 0-150，因为所有数据都归一化到了 150 */}
               <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
-              <Radar name="得分" dataKey="A" stroke="#8b5cf6" strokeWidth={3} fill="#8b5cf6" fillOpacity={0.25} />
-              <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 30px -5px rgba(0,0,0,0.1)' }}/>
+              
+              <Radar 
+                name="得分" 
+                dataKey="normalizedScore" // 这里使用归一化后的分数画图
+                stroke="#8b5cf6" 
+                strokeWidth={3} 
+                fill="#8b5cf6" 
+                fillOpacity={0.25} 
+              />
+              
+              <Tooltip 
+                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 30px -5px rgba(0,0,0,0.1)' }}
+                // 自定义 Tooltip 内容，显示真实分数而不是归一化分数
+                formatter={(value, name, props) => {
+                  const { originalScore, fullMark } = props.payload;
+                  // 计算得分率
+                  const rate = Math.round((originalScore / fullMark) * 100);
+                  return [
+                    `${originalScore} / ${fullMark} (${rate}%)`, 
+                    "实际得分"
+                  ];
+                }}
+              />
             </RadarChart>
           </ResponsiveContainer>
         ) : (
