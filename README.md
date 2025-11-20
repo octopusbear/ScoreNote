@@ -25,7 +25,7 @@
 
 无需下载代码，直接访问以下链接即可使用（建议由部署者填写）：
 
-**[👉 点击这里打开 ScoreNote](https://你的Vercel地址.vercel.app)**
+**[👉 点击这里打开 ScoreNote](https://goal.ltltrs.work)**
 
 > 兼容性：完美支持 PC、Mac、iPad 及各类手机浏览器。
 
